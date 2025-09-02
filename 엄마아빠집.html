@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁극의 인테리어 마스터 체크리스트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #2563eb; /* blue-600 */
+            --color-primary-weak: #dbeafe; /* blue-100 */
+            --color-neutral-900: #0f172a; /* slate-900 */
+            --color-neutral-800: #1e293b; /* slate-800 */
+            --color-neutral-700: #334155; /* slate-700 */
+            --color-neutral-600: #475569; /* slate-600 */
+            --color-neutral-400: #94a3b8; /* slate-400 */
+            --color-neutral-300: #cbd5e1; /* slate-300 */
+            --color-neutral-200: #e2e8f0; /* slate-200 */
+            --color-neutral-100: #f1f5f9; /* slate-100 */
+            --color-neutral-50: #f8fafc;  /* slate-50 */
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--color-neutral-50);
+            color: var(--color-neutral-800);
+            scroll-behavior: smooth;
+        }
+        .is-hidden { display: none; }
+        .tab-active { background: var(--color-primary); color: #fff !important; }
+        .tab-inactive { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+        details > summary {
+            cursor: pointer;
+            list-style: none; /* Firefox, Safari */
+        }
+        details > summary::-webkit-details-marker {
+            display: none; /* Chrome */
+        }
+        details summary .icon {
+            transition: transform 0.2s;
+        }
+        details[open] summary .icon {
+            transform: rotate(90deg);
+        }
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .checklist-item input[type="checkbox"] {
+            margin-top: 6px;
+            flex-shrink: 0;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--color-neutral-300);
+            border-radius: 0.375rem;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .checklist-item input[type="checkbox"]:checked {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        .checklist-item input[type="checkbox"]:checked::after {
+            content: '✔';
+            position: absolute;
+            color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+        }
+        .checklist-item label {
+            margin-left: 0.75rem;
+            cursor: pointer;
+            color: var(--color-neutral-700);
+        }
+        .checklist-item label.checked {
+            color: var(--color-neutral-400);
+            text-decoration: line-through;
+        }
+        .highlight-star {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+        .highlight-red {
+            background-color: var(--color-primary-weak);
+            color: var(--color-primary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .detail-text {
+            color: var(--color-neutral-600);
+            margin-left: 1rem;
+            margin-top: 0.25rem;
+            padding: 0.5rem 0.75rem 0.5rem 1rem;
+            border-left: 3px solid var(--color-primary-weak);
+            background-color: var(--color-neutral-100);
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+        }
+        .detail-text::before {
+            content: '↳';
+            color: var(--color-primary);
+            margin-right: 0.375rem;
+        }
+        /* Consistent container width for both tabs */
+        #process-calendar, #master-checklist { max-width: 64rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+        @media (min-width: 640px) { #process-calendar, #master-checklist { padding-left: 1.5rem; padding-right: 1.5rem; } }
+        @media (min-width: 768px) { #process-calendar, #master-checklist { padding-left: 2rem; padding-right: 2rem; } }
+        /* Flatten collapsibles inside checklist */
+        #master-checklist > section > h2 { display: none; }
+        #master-checklist details { background: transparent !important; box-shadow: none !important; padding: 0; }
+        #master-checklist details > summary { display: none; }
+        #master-checklist .border-l-2 { border-left-color: var(--color-neutral-200) !important; }
+        .group-title {
+            margin-top: 1.25rem;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+            color: var(--color-neutral-900);
+        }
+        .group-block {
+            padding-left: 1rem;
+            border-left: 2px solid var(--color-neutral-200);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">반셀프 인테리어 │ The Project Bible</h1>
+            <div class="text-sm text-slate-600 mb-2">
+                <span style="background-color: var(--color-neutral-100); padding: 0.125rem 0.5rem; border-radius: 0.375rem;">Version: 1.0</span>
+                <span style="background-color: var(--color-neutral-100); padding: 0.125rem 0.5rem; border-radius: 0.375rem; margin-left: 0.5rem;">Date: 2025-09-03</span>
+                <span style="background-color: var(--color-neutral-100); padding: 0.125rem 0.5rem; border-radius: 0.375rem; margin-left: 0.5rem;">Project Manager: [Your Name Here]</span>
+            </div>
+            <p class="text-slate-600">서문: 프로젝트 성공 원칙 — 이 문서는 단순한 체크리스트를 넘어, 시공의 모든 과정에서 지켜져야 할 기준과 원칙을 정의합니다. 성공적인 반셀프 인테리어는 '사람'과 '디테일'에 대한 통제에서 비롯되며, 본 문서는 그 통제를 위한 가장 강력한 도구입니다. 각 공정 담당자는 본 문서를 숙지하고 시공에 임해주시기 바랍니다. 모든 시공은 본 문서의 체크리스트를 기준으로 감리 및 검수합니다.</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="sticky top-0 bg-slate-50/80 backdrop-blur-sm py-4 z-10">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-medium" style="color: var(--color-primary)">전체 진행률</span>
+                <span id="progress-text" class="text-sm font-medium" style="color: var(--color-primary)">0 / 0</span>
+            </div>
+            <div class="w-full rounded-full h-2.5" style="background-color: var(--color-neutral-200)">
+                <div id="progress-bar" class="h-2.5 rounded-full transition-all duration-500" style="width: 0%; background-color: var(--color-primary)"></div>
+            </div>
+        </div>
+        
+        <!-- Tabs Switcher -->
+        <div class="mt-6 flex gap-2">
+            <button id="tab-calendar" class="px-3 py-1.5 rounded-md text-sm font-medium tab-active">공정 캘린더</button>
+            <button id="tab-checklist" class="px-3 py-1.5 rounded-md text-sm font-medium tab-inactive">체크리스트</button>
+        </div>
+        
+        <!-- Process Calendar (Phases) -->
+        <section id="process-calendar" class="mt-4">
+            <h2 class="text-xl font-bold text-slate-800 mb-3">공정 캘린더</h2>
+                <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 0. 마스터 플랜: 최종 결정 체크리스트 (D-30 ~ D-1)
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">A. 시스템별 최종 결정 사항</p>
+                        <div class="pl-4 border-l-2" style="border-color: var(--color-primary-weak)">
+                            <p class="font-semibold text-slate-600">1. 전기 / 조명 / 통신</p>
+                            <div class="checklist-item"><input type="checkbox" id="p0-1"><label for="p0-1">조명별 위치, 종류(다운라이트, T5 간접, 펜던트, 벽등), 색온도 최종 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-2"><label for="p0-2">다운라이트: 소파/침대 머리 위 직접 조명 금지, 통로/조리대/테이블 위주 배치</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-3"><label for="p0-3">디밍 스위치 적용 구간 확정 (거실, 침실 등)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-4"><label for="p0-4">침대 양옆 대칭 조명(벽등/펜던트) 위치 확정</label></div>
+                            <p class="font-semibold text-slate-600 mt-2">스위치 계획</p>
+                            <div class="checklist-item"><input type="checkbox" id="p0-5"><label for="p0-5">회로 분리 계획 확정 (예: 거실 - 메인/간접/다운라이트 각각 제어)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-6"><label for="p0-6">3로 스위치 적용 위치 확정 (침실 입구-침대 옆, 복도 양끝 등)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-7"><label for="p0-7">모든 스위치 박스 내부에 중성선 배선 필수</label></div>
+                            <p class="font-semibold text-slate-600 mt-2">콘센트 계획</p>
+                            <div class="checklist-item"><input type="checkbox" id="p0-8"><label for="p0-8">가전/가구 위치에 따른 콘센트 위치 및 높이 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-9"><label for="p0-9">가구 매립형 콘센트(화장대, 아일랜드 등) 위치 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-10"><label for="p0-10">특수 목적 전원(전동 커튼, 시스템 에어컨, 프로젝터 등) 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-11"><label for="p0-11">고용량 가전 단독/분리 배선 계획 확정</label></div>
+                            <p class="font-semibold text-slate-600 mt-2">통신 / 시스템</p>
+                            <div class="checklist-item"><input type="checkbox" id="p0-12"><label for="p0-12">신규 인터폰/월패드: 현장 시스템과 호환 모델 사전 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-13"><label for="p0-13">LAN 포트 및 Wi-Fi AP(증폭기) 위치 확정</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-4">2. 구조 / 목공</p>
+                        <div class="pl-4 border-l-2" style="border-color: var(--color-primary-weak)">
+                            <div class="checklist-item"><input type="checkbox" id="p0-14"><label for="p0-14">합판 보강: TV/선반/욕실 수납장/상부장 없는 선반 위치 보강</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-15"><label for="p0-15">문/문틀: 방문/중문 디자인, 9mm 문선, 개폐 방향 최종 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-16"><label for="p0-16">천장: 평탄화 및 우물천장 디자인 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-17"><label for="p0-17">단열: 외벽/확장부 단열재 종류 및 두께 확정</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-4">3. 설비 / 욕실</p>
+                        <div class="pl-4 border-l-2" style="border-color: var(--color-primary-weak)">
+                            <div class="checklist-item"><input type="checkbox" id="p0-18"><label for="p0-18">욕실 건/습식 분리, 샤워부스 단차/바닥 올림 높이 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-19"><label for="p0-19">매립형 시공: 매립 선반, 매립 수전 위치/사이즈 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-20"><label for="p0-20">배수구 종류/위치(라인 유가 등) 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p0-21"><label for="p0-21">수압 체크 및 가압펌프 필요 여부 결정</label></div>
+                        </div>
+                </details>
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 1. 1주차: 철거 및 기초 골조 공사
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">D-1 (일) │ 현장 보양</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-0-1"><label for="ph1-0-1">공용 엘리베이터, 복도 등 손상 방지를 위한 보양 상태 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 1 (월) │ 철거 1일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-1-1"><label for="ph1-1-1">철거 범위 최종 확인(벽, 바닥, 창호, 가구 등)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-1-2"><label for="ph1-1-2">보존 대상 손상 방지 요청(샷시 등)</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 2 (화) │ 철거 2일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-2-1"><label for="ph1-2-1">욕실 올철거(방수층까지)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-2-2"><label for="ph1-2-2">폐기물 전량 반출 및 주변 정리</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 3 (수) │ 설비</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-3-1"><label for="ph1-3-1">도면 일치 여부: 욕실/주방/세탁실 배관·배수구 위치 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-3-2"><label for="ph1-3-2">매립 수전 배관 수평·위치 정확도 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-3-3"><label for="ph1-3-3">에어컨 배수관 구배(기울기) 확보 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 4 (목) │ 조적/미장</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-4-1"><label for="ph1-4-1">샤워부스 경계, 건식 바닥 높임, 젠다이, 매립 선반 도면대로 시공</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-4-2"><label for="ph1-4-2">모든 조적벽 수직/수평 시공 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 5 (금) │ 방수</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-5-1"><label for="ph1-5-1">1, 2차 방수 도포 범위/두께 꼼꼼히 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph1-5-2"><label for="ph1-5-2">배수구/모서리/매립 선반 내부 등 취약부 중점 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 6 (토) │ 양생</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph1-6-1"><label for="ph1-6-1">현장 휴무. 방수층 및 조적/미장 양생 시간 확보(출입 자제)</label></div>
+                        </div>
+                    </div>
+                </details>
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 2. 2주차: 목공 & 전기 & 타일
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">Day 8 (월) │ 목공 1일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-8-1"><label for="ph2-8-1">천장(우물/평탄화), 가벽, 문틀, 커튼박스 전체 작업 도면 협의</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 9 (화) │ 목공 2일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-9-1"><label for="ph2-9-1">구조물 수직/수평 및 위치 정확도 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-9-2"><label for="ph2-9-2">문 개폐 방향 재확인(가구 간섭 없음)</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 10 (수) │ 목공/전기 협업</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-10-1"><label for="ph2-10-1">★현장 최종 마킹★: 조명/스위치/콘센트 위치 실선 표시로 최종 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-10-2"><label for="ph2-10-2">벽 보강, 가구 매립 콘센트, 스위치 박스 중성선 배선 확인</label></div>
+                            <p class="detail-text">조명 계획과 스위치/콘센트 분리 계획을 현장에서 실선으로 확정하고, 벽 보강/매립 전선을 시공 전 재확인.</p>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 11 (목) │ 목공 4일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-11-1"><label for="ph2-11-1">석고보드 평탄도/이음매 단차 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-11-2"><label for="ph2-11-2">커튼박스 전동커튼 전원 및 이중커튼 폭 확보 확인</label></div>
+                            <p class="detail-text">커튼박스 안 전동커튼 전원선, 커튼 겹침 여유폭(속커튼+암막) 확보 여부 확인.</p>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 12 (금) │ 타일 1일차(욕실)</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-12-1"><label for="ph2-12-1">★담수 테스트★: 타일 시공 전 누수 여부 최종 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-12-2"><label for="ph2-12-2">★타일 시작점 지정★: 보이는 면에 온장 타일 시공되도록 레이아웃 확정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-12-3"><label for="ph2-12-3">줄눈 간격 일정성 확인</label></div>
+                            <p class="detail-text">타일 레이아웃, 졸리/코너비드 등 마감 방식은 시공 전 반장과 최종 합의.</p>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 13 (토) │ 타일 2일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph2-13-1"><label for="ph2-13-1">코너 마감(졸리/코너비드) 방식 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph2-13-2"><label for="ph2-13-2">줄눈 색상 재확인 및 양생</label></div>
+                        </div>
+                    </div>
+                </details>
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 3. 3주차: 마감 공사 1단계
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">Day 15 (월) │ 도장/필름 1일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-15-1"><label for="ph3-15-1">퍼티 평활도 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph3-15-2"><label for="ph3-15-2">페인트 조색 결과 샘플 일치 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 16 (화) │ 도장/필름 2일차</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-16-1"><label for="ph3-16-1">페인트/필름 마감 품질 결함 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 17 (수) │ 가구 1차(몸통)</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-17-1"><label for="ph3-17-1">붙박이장 내부 구성 도면 일치</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph3-17-2"><label for="ph3-17-2">하드웨어 사양(블룸/헤티히) 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 18 (목) │ 바닥</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-18-1"><label for="ph3-18-1">바닥 평탄/청결 상태 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph3-18-2"><label for="ph3-18-2">시공 중 손상 방지 및 즉시 보양 요청</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 19 (금) │ 가구 2차(주방 등)</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-19-1"><label for="ph3-19-1">빌트인 가전 공간 실측 일치 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph3-19-2"><label for="ph3-19-2">인덕션 하부 오븐 열 배출/통풍구 확보 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 20 (토) │ 양생 및 정리</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph3-20-1"><label for="ph3-20-1">바닥/가구 접착제 양생 시간 확보</label></div>
+                        </div>
+                    </div>
+                </details>
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 4. 4주차: 최종 마감 및 준공
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">Day 22 (월) │ 도배</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-22-1"><label for="ph4-22-1">도배 이음새/기포/오염 여부 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 23 (화) │ 위생도기/욕실</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-23-1"><label for="ph4-23-1">누수/수압 체크</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-23-2"><label for="ph4-23-2">건식 욕실 배수 테스트</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-23-3"><label for="ph4-23-3">실리콘 마감 상태 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 24 (수) │ 전기 2차(기구)</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-24-1"><label for="ph4-24-1">전체 점등/작동 확인(스위치/콘센트 포함)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-24-2"><label for="ph4-24-2">스위치/콘센트 라인 정렬 정확도 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 25 (목) │ 문/마감재</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-25-1"><label for="ph4-25-1">문 작동/수평 상태 확인</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-25-2"><label for="ph4-25-2">하드웨어 스크래치/고정 상태 확인</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 26 (금) │ 입주 청소</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-26-1"><label for="ph4-26-1">공사 분진 완전 제거</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-26-2"><label for="ph4-26-2">청소 중 마감재 손상 방지</label></div>
+                        </div>
+                        <p class="font-semibold text-slate-600 mt-2">Day 27 (토) │ 최종 검수</p>
+                        <div class="pl-4">
+                            <div class="checklist-item"><input type="checkbox" id="ph4-27-1"><label for="ph4-27-1">가족과 함께 전 항목 종합 검수</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="ph4-27-2"><label for="ph4-27-2">하자 리스트 작성 및 보수 일정 확정</label></div>
+                        </div>
+                    </div>
+                </details>
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        Phase 5. 공사 완료 후
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <div class="checklist-item"><input type="checkbox" id="p5-1"><label for="p5-1">하자 보수 완료 확인 및 공정팀별 잔금 지급</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="p5-2"><label for="p5-2">베이크 아웃 실시(난방으로 유해물질 배출)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="p5-3"><label for="p5-3">자투리 마감재/정보 보관(타일/바닥재/페인트 등)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="p5-4"><label for="p5-4">최종 배선/설비 도면 수령</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="p5-5"><label for="p5-5">이사 및 입주</label></div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <main id="master-checklist" class="space-y-6 is-hidden">
+            <div id="flat-checklist"></div>
+
+            <!-- PART 1: 시스템별 체크리스트 -->
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 border-b-2 pb-2 mb-4" style="border-color: var(--color-neutral-200)">PART 1. 시스템별 체크리스트: 집의 뼈대</h2>
+                
+                <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        1. 전기 / 조명 / 통신
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <h3 class="font-semibold text-md mt-4" style="color: var(--color-primary)">조명 계획: 호텔식 조명 설계</h3>
+                        <div class="pl-4 border-l-2" style="border-color: var(--color-primary-weak)">
+                            <h4 class="font-medium text-slate-700 mb-2">조명 품질 기준</h4>
+                            <div class="checklist-item"><input type="checkbox" id="c1-1"><label for="c1-1">색온도 통일: 집 전체 조명 <strong class="text-slate-800">3000K(전구색) 또는 4000K(주백색)</strong>으로 통일 <span class="highlight-red">필수!</span></label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-2"><label for="c1-2">연색성(CRI): 모든 조명 <strong class="text-slate-800">CRI(Ra) 90 이상</strong> 제품 선택</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-3"><label for="c1-3">글레어 방지: 서재, 주방 등 작업 공간은 눈부심 적은 <strong class="text-slate-800">UGR 19 이하</strong> 제품 선택</label></div>
+
+                            <h4 class="font-medium text-slate-700 mt-4 mb-2">공간별 조명 설계</h4>
+                            <p class="font-semibold text-slate-600">거실</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-4"><label for="c1-4">우물천장 간접조명, 다운라이트, 커튼박스 간접조명 3요소 중심 설계</label></div>
+                            <p class="detail-text">다운라이트는 '월 워셔' 방식과 동선 확보용으로 역할을 분리해 배치.</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-5"><label for="c1-5">'우물천장', '다운라이트(구역별)', '커튼박스' 조명 스위치 개별 분리 <span class="highlight-red">필수!</span></label></div>
+                            
+                            <p class="font-semibold text-slate-600 mt-2">주방</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-6"><label for="c1-6">식탁 펜던트등 중심으로 조리 공간은 다운라이트로 조도 확보</label></div>
+                            <p class="detail-text">식탁등 위치에 전선만 인출 후 '마감 캡' 처리. 주변에 다운라이트 2~4개 설치.</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-7"><label for="c1-7">무지주 선반 하단 T5 간접조명용 전선 미리 인출</label></div>
+
+                            <p class="font-semibold text-slate-600 mt-2">침실</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-8"><label for="c1-8">다운라이트와 간접조명(커튼박스, 침대 헤드보드 등)만으로 설계</label></div>
+                             <p class="detail-text">누웠을 때 눈부시지 않도록 침대 헤드 바로 위는 피하고, 통로나 발치 쪽으로 배치.</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-9"><label for="c1-9">화장대: 거울 양옆 수직 벽등 설치 (얼굴 그림자 방지)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-10"><label for="c1-10">붙박이장: 문 열림 감지 '도어 센서 연동 LED 바' 설치 (가구/전기팀 협의)</label></div>
+                            
+                            <p class="font-semibold text-slate-600 mt-2">공통</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-11"><label for="c1-11">풋등(Foot light): 복도, 침실 벽 하단에 센서 연동형으로 설치</label></div>
+                        </div>
+
+                        <h3 class="font-semibold text-md mt-6" style="color: var(--color-primary)">스위치 & 콘센트 계획</h3>
+                        <div class="pl-4 border-l-2" style="border-color: var(--color-primary-weak)">
+                             <p class="font-semibold text-slate-600">스위치</p>
+                             <div class="checklist-item"><input type="checkbox" id="c1-12"><label for="c1-12">일괄소등 스위치: 현관에 설치</label></div>
+                             <div class="checklist-item"><input type="checkbox" id="c1-13"><label for="c1-13">3로 스위치: 침실 문 옆과 침대 헤드보드 옆에 설치하여 양쪽에서 제어</label></div>
+                             <p class="detail-text">침대 옆(B): 3로 스위치 + 개별 간접조명 스위치 + <strong class="text-slate-800">콘센트(USB 겸용)</strong> 구성</p>
+
+                            <p class="font-semibold text-slate-600 mt-2">콘센트</p>
+                            <div class="checklist-item"><input type="checkbox" id="c1-14"><label for="c1-14">가구/가전 위치 확정 후 최종 위치 결정</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-15"><label for="c1-15">주방 가전 위치에 정확히 배치 (냉장고, 식세기, 정수기 등)</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-16"><label for="c1-16"><span class="highlight-star">★</span> 인덕션 <strong class="text-slate-800">단독 배선</strong> <span class="highlight-red">필수!</span></label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-17"><label for="c1-17"><span class="highlight-star">★</span> 인덕션 하부 광파오븐 <strong class="text-slate-800">별도 회로 분리</strong> <span class="highlight-red">필수!</span></label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-18"><label for="c1-18">로봇청소기 스테이션 위치에 콘센트 매립</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c1-19"><label for="c1-19">숨겨진 콘센트: 커튼박스(전동커튼), 화장대 서랍(드라이기), 붙박이장(스타일러), 벽걸이 TV 뒤</label></div>
+                        
+                             <p class="font-semibold text-slate-600 mt-2">통신 / 시스템</p>
+                             <div class="checklist-item"><input type="checkbox" id="c1-20"><label for="c1-20">유선랜(LAN) 포트: 각 방 책상, TV 벽, Wi-Fi 증폭기 위치</label></div>
+                             <div class="checklist-item"><input type="checkbox" id="c1-21"><label for="c1-21">Wi-Fi AP 매립: 집 중앙 천장에 무선 공유기 매립</label></div>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        2. 목공 / 구조 / 단열
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <div class="checklist-item"><input type="checkbox" id="c2-1"><label for="c2-1">마감 방식 최종 결정 (우물천장, 무몰딩, 마이너스 몰딩 등)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c2-2"><label for="c2-2"><span class="highlight-star">★</span> 벽 보강: 벽걸이 TV, 선반, 욕실장, 무지주 선반 위치에 합판 보강 <span class="highlight-red">필수!</span></label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c2-3"><label for="c2-3">문/문틀 결정: 9mm 문선 또는 히든 도어</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c2-4"><label for="c2-4">모든 문 개폐 방향 및 가구 간섭 여부 확인, 전체 문턱 제거</label></div>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        3. 설비 / 공조 / 방음
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <div class="checklist-item"><input type="checkbox" id="c3-1"><label for="c3-1">수도/배관: 세면대(탑볼/언더볼), 샤워기(매립/노출) 위치 확정</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c3-2"><label for="c3-2">환기: 욕실 고성능 환풍기(댐퍼 포함), 주방 후드 외부 배기 최단 경로 확인</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c3-3"><label for="c3-3">소음 방지: 화장실 천장 배수관 방음재 시공, 서재 등 벽체 차음재 보강</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c3-4"><label for="c3-4"><span class="highlight-star">★</span> 인덕션 하부 광파오븐: <strong class="text-slate-800">열 배출 공간(최소 이격 거리)</strong> 확보</label></div>
+                    </div>
+                </details>
+            </section>
+            
+            <!-- PART 2: 공간별 체크리스트 -->
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 border-b-2 pb-2 mb-4 mt-8" style="border-color: var(--color-neutral-200)">PART 2. 공간별 체크리스트: 디테일</h2>
+
+                <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        공간별 마감재 및 가구
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                     <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600 mt-2">현관</p>
+                        <div class="checklist-item"><input type="checkbox" id="c4-1"><label for="c4-1">신발장: 하부 띄움 + 간접조명, 내부 구성(우산꽂이 등) 계획</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-2"><label for="c4-2">바닥 타일: 600x600mm 이상 대형 타일과 줄눈 색상 통일</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">거실 & 주방</p>
+                        <div class="checklist-item"><input type="checkbox" id="c4-3"><label for="c4-3">바닥재: 종류, 색상, 시공 방향 결정</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-4"><label for="c4-4">재료분리대 최소화 (로봇청소기 이동)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-5"><label for="c4-5">주방 가구: 모든 빌트인 가전의 <strong class="text-slate-800">정확한 모델명/사이즈</strong> 가구팀 전달 <span class="highlight-red">필수!</span></label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">욕실 (호텔처럼)</p>
+                        <div class="checklist-item"><input type="checkbox" id="c4-6"><label for="c4-6"><span class="highlight-star">★</span> 매립 선반 (샴푸 니치) 제작</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-7"><label for="c4-7">타일: 600x600mm 이상 대형 포세린 타일로 벽/바닥 시공</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-8"><label for="c4-8">수전/도기: 매립형 수전, 라인 유가, 치마형 변기 선택</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-9"><label for="c4-9">액세서리 톤 통일 (무광 니켈, 브러쉬드 골드 등)</label></div>
+                        
+                        <p class="font-semibold text-slate-600 mt-4">각 방 (침실, 서재 등)</p>
+                        <div class="checklist-item"><input type="checkbox" id="c4-10"><label for="c4-10">침대 헤드보드 벽 포인트 마감 (템바보드, 패브릭 등)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c4-11"><label for="c4-11">이중 커튼 박스 제작 (속커튼+암막커튼)</label></div>
+                    </div>
+                </details>
+            </section>
+
+            <!-- PART 3: 숨은 디테일 -->
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 border-b-2 pb-2 mb-4 mt-8" style="border-color: var(--color-neutral-200)">PART 3. 삶의 질을 바꾸는 '숨은 디테일'</h2>
+                 <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        마감, 편의, 안전, 프로세스
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">마감 디테일</p>
+                        <div class="checklist-item"><input type="checkbox" id="c5-1"><label for="c5-1">모든 방문, 가구 손잡이 디자인과 색상 톤앤매너 통일</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c5-2"><label for="c5-2">도어 스토퍼: 바닥 돌출형 대신 문 상단/경첩 자석 스토퍼로 교체</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c5-3"><label for="c5-3">실리콘 색상: 모든 실리콘을 마감재와 가장 유사한 색으로 지정</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">편의/안전 디테일</p>
+                        <div class="checklist-item"><input type="checkbox" id="c5-4"><label for="c5-4">창문 핸들 간섭: 블라인드/커튼 설치 시 창문 핸들과의 간섭 여부 확인</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c5-5"><label for="c5-5">레버형 손잡이: 동그란 문고리 대신 레버형 손잡이로 교체</label></div>
+                        
+                        <p class="font-semibold text-slate-600 mt-4">프로세스 디테일</p>
+                        <div class="checklist-item"><input type="checkbox" id="c5-6"><label for="c5-6">모든 내용이 반영된 최종 도면과 계약서 서면 확보</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c5-7"><label for="c5-7"><span class="highlight-star">★</span> 공정별 사진 기록: 철거 후, 목공 후, 배선 후 등 벽이 덮이기 전 모든 공정 사진 찍어두기</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c5-8"><label for="c5-8">폐기물 처리 계획이 계약에 명확히 포함되어 있는지 확인</label></div>
+                    </div>
+                </details>
+            </section>
+
+            <!-- PART 4: 최상위 디테일 -->
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 border-b-2 pb-2 mb-4 mt-8" style="border-color: var(--color-neutral-200)">PART 4. 최상위 디테일: '살아본 사람만 아는 것들'</h2>
+                 <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        유지관리, 스마트홈, 인체공학
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">유지관리 / 청소 편의성</p>
+                        <div class="checklist-item"><input type="checkbox" id="c6-1"><label for="c6-1">주방 벽체: 타일 대신 줄눈 없는 대형 박판 세라믹이나 강화유리 고려</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-2"><label for="c6-2">기능성 줄눈: 욕실, 현관 등 오염 잦은 곳은 '에폭시' 또는 '폴리우레아' 줄눈 시공</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-3"><label for="c6-3">가구 하부 마감: 로봇청소기 진입 높이(최소 15cm) 확보 또는 걸레받이로 차단</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-4"><label for="c6-4">실리콘 마감 최소화: 주방 상판, 젠다이 등은 '줄눈' 마감 요청</label></div>
+                        
+                        <p class="font-semibold text-slate-600 mt-4">미래 대비 스마트홈 인프라</p>
+                        <div class="checklist-item"><input type="checkbox" id="c6-5"><label for="c6-5"><span class="highlight-star">★</span> 모든 스위치 박스에 '중성선' 배선 요청 (IoT 스위치용)</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-6"><label for="c6-6">스마트홈 허브 위치: 통신 단자함 근처에 공간과 콘센트 마련</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-7"><label for="c6-7">스피커선 매립: TV 벽면과 소파 뒤쪽 벽면에 스피커선 매립</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">인체공학적 디테일</p>
+                        <div class="checklist-item"><input type="checkbox" id="c6-8"><label for="c6-8">가구 높이 맞춤: 주 사용자의 키에 맞춰 싱크대, 화장대 높이 조절</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-9"><label for="c6-9">주방 하부장 '대형 서랍'으로 구성하여 편의성 극대화</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-10"><label for="c6-10">수도 '중간 밸브' 위치를 손 닿기 쉬운 곳에 설치</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">고급 마감 디테일</p>
+                        <div class="checklist-item"><input type="checkbox" id="c6-11"><label for="c6-11">스위치/콘센트 라인 수평/수직 정렬 강조</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-12"><label for="c6-12">목재/필름 결 방향 통일</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c6-13"><label for="c6-13">환풍구/디퓨저 커버를 미니멀한 디자인 제품으로 교체</label></div>
+                    </div>
+                </details>
+            </section>
+            
+             <!-- FINAL CHAPTER -->
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 border-b-2 pb-2 mb-4 mt-8" style="border-color: var(--color-neutral-200)">FINAL CHAPTER: 집착의 미학 │ 0.1%의 디테일</h2>
+                 <details class="bg-white rounded-lg shadow-sm p-4" open>
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-900">
+                        마감 정밀도, 감각적 경험, 하자 봉쇄
+                        <svg class="icon w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </summary>
+                    <div class="mt-4 space-y-3">
+                        <p class="font-semibold text-slate-600">마감의 정밀도: 1mm와의 싸움</p>
+                        <div class="checklist-item"><input type="checkbox" id="c7-1"><label for="c7-1">타일 시작점 지정: 잘린 타일이 안 보이는 곳으로 가도록 레이아웃 확정</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-2"><label for="c7-2">도장 마감 엣지 '코킹' 처리 후 페인트 마감 요청</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-3"><label for="c7-3">가구 '서라운딩 몰딩' 제거를 위해 목공 단계부터 수직/수평 시공 요구</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">감각적 경험: 소리, 촉감, 빛</p>
+                        <div class="checklist-item"><input type="checkbox" id="c7-4"><label for="c7-4">방문 프레임 '방음/방풍 스트립' 시공</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-5"><label for="c7-5">가구 하드웨어 사양 지정: '블룸', '헤티히' 등 고급 브랜드 및 댐퍼(소프트 클로징) 기능 명시</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-6"><label for="c7-6">바닥 수평 몰탈 전 '프라이머' 도포 확인 (마루 소음 예방)</label></div>
+                        
+                        <p class="font-semibold text-slate-600 mt-4">잠재적 하자 원천 봉쇄</p>
+                        <div class="checklist-item"><input type="checkbox" id="c7-7"><label for="c7-7"><span class="highlight-star">★</span> 욕실 방수 후 <strong class="text-slate-800">'담수 테스트' (24시간 이상)</strong> 요청 <span class="highlight-red">필수!</span></label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-8"><label for="c7-8">시스템 에어컨 배수관 '구배(기울기)' 확인 요청</label></div>
+
+                        <p class="font-semibold text-slate-600 mt-4">운영 및 유지보수 시스템 구축</p>
+                        <div class="checklist-item"><input type="checkbox" id="c7-9"><label for="c7-9">매립 설비 '점검구' 확보</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-10"><label for="c7-10">최종 '설비/전기 배선 도면' 확보</label></div>
+                        <div class="checklist-item"><input type="checkbox" id="c7-11"><label for="c7-11">모든 마감재 '자투리' 및 정보(페인트 컬러코드 등) 보관</label></div>
+                    </div>
+                </details>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 text-slate-500 text-sm">
+            <p>&copy; 2024 Ultimate Home Interior Checklist. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const totalItems = checkboxes.length;
+            const STORAGE_KEY = 'interiorChecklistProgress';
+            // Tabs
+            const tabCalendar = document.getElementById('tab-calendar');
+            const tabChecklist = document.getElementById('tab-checklist');
+            const sectionCalendar = document.getElementById('process-calendar');
+            const sectionChecklist = document.getElementById('master-checklist');
+            function switchTab(to) {
+                if (!tabCalendar || !tabChecklist || !sectionCalendar || !sectionChecklist) return;
+                if (to === 'calendar') {
+                    tabCalendar.classList.add('tab-active');
+                    tabCalendar.classList.remove('tab-inactive');
+                    tabChecklist.classList.add('tab-inactive');
+                    tabChecklist.classList.remove('tab-active');
+                    sectionCalendar.classList.remove('is-hidden');
+                    sectionChecklist.classList.add('is-hidden');
+                    sectionCalendar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    tabChecklist.classList.add('tab-active');
+                    tabChecklist.classList.remove('tab-inactive');
+                    tabCalendar.classList.add('tab-inactive');
+                    tabCalendar.classList.remove('tab-active');
+                    sectionChecklist.classList.remove('is-hidden');
+                    sectionCalendar.classList.add('is-hidden');
+                    sectionChecklist.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+            if (tabCalendar && tabChecklist) {
+                tabCalendar.addEventListener('click', () => switchTab('calendar'));
+                tabChecklist.addEventListener('click', () => switchTab('checklist'));
+            }
+
+            // Build flat checklist groups from existing items (ids preserved)
+            const flatRoot = document.getElementById('flat-checklist');
+            if (flatRoot) {
+                const groups = [
+                    { title: '전기 / 조명 / 통신', ids: ['c1-1','c1-2','c1-3','c1-4','c1-5','c1-6','c1-7','c1-8','c1-9','c1-10','c1-11'] },
+                    { title: '스위치 / 콘센트', ids: ['c1-12','c1-13','c1-14','c1-15','c1-16','c1-17','c1-18','c1-19','c1-20','c1-21'] },
+                    { title: '구조 / 목공', ids: ['c2-1','c2-2','c2-3','c2-4'] },
+                    { title: '설비 / 욕실 / 공조', ids: ['c3-1','c3-2','c3-3','c3-4'] },
+                    { title: '공간별 마감 (현관 / 거실·주방 / 욕실 / 각 방)', ids: ['c4-1','c4-2','c4-3','c4-4','c4-5','c4-6','c4-7','c4-8','c4-9','c4-10','c4-11'] },
+                    { title: '품질 / 프로세스 / 안전 디테일', ids: ['c5-1','c5-2','c5-3','c5-4','c5-5','c5-6','c5-7','c5-8'] },
+                    { title: '유지관리 / 스마트홈 / 인체공학 / 고급', ids: ['c6-1','c6-2','c6-3','c6-4','c6-5','c6-6','c6-7','c6-8','c6-9','c6-10','c6-11','c6-12','c6-13'] }
+                ];
+                function cloneItemById(id) {
+                    const input = document.getElementById(id);
+                    if (!input) return null;
+                    const label = input.nextElementSibling;
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'checklist-item';
+                    const clonedInput = input.cloneNode(true);
+                    const clonedLabel = label.cloneNode(true);
+                    clonedInput.id = id; // preserve id for storage
+                    clonedLabel.setAttribute('for', id);
+                    wrapper.appendChild(clonedInput);
+                    wrapper.appendChild(clonedLabel);
+                    return wrapper;
+                }
+                groups.forEach(group => {
+                    const titleEl = document.createElement('p');
+                    titleEl.className = 'group-title';
+                    titleEl.textContent = group.title;
+                    const block = document.createElement('div');
+                    block.className = 'group-block';
+                    group.ids.forEach(id => {
+                        const item = cloneItemById(id);
+                        if (item) block.appendChild(item);
+                    });
+                    flatRoot.appendChild(titleEl);
+                    flatRoot.appendChild(block);
+                });
+            }
+
+            // 체크 상태에 따라 라벨 스타일 변경
+            function styleLabel(checkbox) {
+                const label = checkbox.nextElementSibling;
+                if (checkbox.checked) {
+                    label.classList.add('checked');
+                } else {
+                    label.classList.remove('checked');
+                }
+            }
+
+            // 진행률 업데이트
+            function updateProgress() {
+                const checkedItems = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked').length;
+                const percentage = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+                
+                progressBar.style.width = percentage + '%';
+                progressText.textContent = `${checkedItems} / ${totalItems}`;
+
+                saveState();
+            }
+
+            // 상태 저장
+            function saveState() {
+                const state = {};
+                checkboxes.forEach(checkbox => {
+                    state[checkbox.id] = checkbox.checked;
+                });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+
+            // 상태 불러오기
+            function loadState() {
+                const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (savedState) {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = savedState[checkbox.id] || false;
+                        styleLabel(checkbox);
+                    });
+                }
+                updateProgress();
+            }
+
+            // 이벤트 리스너 등록
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    styleLabel(checkbox);
+                    updateProgress();
+                });
+            });
+
+            // 초기화
+            loadState();
+        });
+    </script>
+
+</body>
+</html>
